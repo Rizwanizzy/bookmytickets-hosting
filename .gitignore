@@ -44,8 +44,8 @@ ENV/
 __pycache__
 
 # Ignore migrations if not using Django South
-*/*/migrations/
-*/migrations/
+# */*/migrations/
+# */migrations/
 
 # Ignore the development settings module in production
 */settings/local.py
