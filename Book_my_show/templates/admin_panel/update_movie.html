@@ -1,0 +1,105 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+        <!-- Form Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-11">
+                        <div class="bg-light rounded h-100 p-4">
+                            <h6 class="mb-4">Update Movie</h6>
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% if movies %}
+                                <div style="display:flex">
+                                    <div class="col-sm-12 col-xl-6" style="margin-right:1rem">
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="title" name="title" placeholder="Movie Title" value="{{movies.title}}"
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Description</label>
+                                            <textarea class="form-control" name="description" placeholder="Movie Description"
+                                                id="floatingTextarea" style="height: 124px;">{% if movies.description is None%}{% else %}{{movies.description}}{% endif %}</textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Cast</label>
+                                            <input type="text" class="form-control" id="trailer" name="cast" {% if movies.cast is None%} value="" {% else%} value="{{movies.cast}}" {% endif %}
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Writers</label>
+                                            <input type="text" class="form-control" id="trailer" name="writers" {% if movies.writers is None%} value="" {% else%} value="{{movies.writers}}" {% endif %}
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Movie Trailer</label>
+                                            <input type="url" class="form-control" id="trailer" name="trailer" value="{{movies.trailer}}"
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Language</label>
+                                            <select class="form-select" id="floatingSelect" name="language"
+                                                aria-label="Floating label select example" required>
+                                                <option selected></option>
+                                                {% for lang in languages%}
+                                                <option value="{{lang.id}}" {% if movies.language.id == lang.id %} selected {% endif %}>{{lang.language}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-xl-4">
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Genre</label>
+                                            <input type="text" class="form-control" id="title" name="genre" placeholder="Movie Genre" {% if movies.genere is None%} value="" {% else%} value="{{movies.genre}}" {% endif %}
+                                                aria-describedby="emailHelp" >
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="formFile" class="form-label">Image</label>
+                                            <p>{{movies.image.url}}</p>
+                                            <input class="form-control" type="file" id="formFile" name="image" value="/{{movies.image.url}}" required> 
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="formFile" class="form-label">Poster</label>
+                                            <p>{{movies.poster.url}}</p>
+                                            <input class="form-control" type="file" id="formFile" name="poster" value="/{{movies.poster.url}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Director</label>
+                                            <input type="text" class="form-control" id="trailer" name="director" {% if movies.director is None%} value="" {% else%} value="{{movies.director}}" {% endif %}
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Year</label>
+                                            <input type="text" class="form-control" id="trailer" name="year" {% if movies.year is None%} value="" {% else%} value="{{movies.year}}" {% endif %}
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Run Time</label>
+                                            <input type="text" class="form-control" id="runtime" name="runtime" {% if movies.runtime is None %} value="" {% else %} value="{{movies.runtime}}" {% endif %}
+                                                aria-describedby="emailHelp" >
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Release Date</label>
+                                            <input type="date" class="form-control" id="release_date" name="release_date" value="{{movies.release_date|date:'Y-m-d'}}"
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div align="center">
+                                    <button type="submit" class="btn btn-primary">UPDATE</button>
+                                    <a href="{% url 'delete_movie' movies.id %}" class="btn btn-danger">DELETE</a>
+
+                                    <a href="{% url 'admin_movies' %}" class="btn btn-warning">CANCEL</a>
+                                </div>
+                                        
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        <!-- Form End -->
+
+{% endblock %}

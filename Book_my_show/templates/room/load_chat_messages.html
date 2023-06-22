@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% for message in chat_messages %}
+<div class="message">
+    <span class="username" style="font-size: 20px;">
+        <strong>{{ message.sender.username }}:</strong>
+    </span>
+    <span class="content" style="font-size: 20px;">{{ message.message }}</span>
+</div>
+<hr>
+{% endfor %}
+<br>
+
+    </div>
+{% endblock %}

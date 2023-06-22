@@ -1,0 +1,52 @@
+# Python/Django
+*.pyc
+*.pyo
+__pycache__/
+*.pyd
+*.swp
+*.swo
+*.log
+*.pid
+*.coverage
+htmlcov/
+.coverage
+.vscode/
+
+# Static files
+staticfiles/
+.media/
+
+# Environment and deployment files
+.env
+.env.local
+.env.*.local
+.env.test
+.env.prod
+.env.example
+
+# Database
+*.db
+*.sqlite3
+db.sqlite3
+
+# Dependency directories
+venv/
+venv32/
+.env/
+ENV/
+
+# Compiled Python modules
+*.pyc
+*.pyd
+*.pyo
+*.pyz
+*.pyw
+__pycache__
+
+# Ignore migrations if not using Django South
+*/*/migrations/
+*/migrations/
+
+# Ignore the development settings module in production
+*/settings/local.py
+*/settings/*.pyc

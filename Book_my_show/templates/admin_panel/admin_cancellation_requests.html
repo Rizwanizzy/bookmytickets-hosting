@@ -1,0 +1,43 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+
+<div class="container-fluid pt-4 px-2" style="min-height:80vh;margin-left:-20px">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Cancellation Requests</h6>
+
+                {% for request in cancellation_requests %}
+                    <div class="alert alert-primary" role="alert" id="request-{{ request.id }}">
+                        <div class="container">
+                            <div class="row">
+                                <strong><p>Booking ID: {{ request.booking.booking_id }}</p></strong>
+                                <div class="col">
+                                    
+                                    <p>Username: {{ request.booking.user }}</p>
+                                    <p>Movie: {{ request.booking.movie }}</p>
+                                    <p>Reason: {{ request.reason }}</p>
+                                    <p>Status: {{ request.status }}</p>     
+                                    <p>Date: {{ request.created_at }}</p>                                
+                                </div>
+                                <div class="col">
+                                    
+                                    <p>Theatre: {{ request.booking.theatre }}</p>
+                                    <p>Screen: {{ request.booking.screen }}</p>
+                                    <p>On: {{ request.booking.date }} -- {{request.booking.show_time}}</p>
+                                    <p>Seats: {% if request.booking.booked_seats %}{{request.booking.booked_seats}} {% else %}Deselected{% endif %}</p>
+                                    <p>Price: {{ request.booking.price }}/-</p>
+                                </div>
+                            </div>                       
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base1.html' %}
+{% load static %}
+
+{% block admin_page %}
+    <div>
+        <h4>Admin Reply</h4>
+        <br>
+        <!-- Display the received message and provide a form to submit a reply -->
+        <div>{{ message.sender.username }}: {{ message.message }}</div>
+        <hr>
+        <br>
+        <form method="POST" action="{% url 'admin_reply' %}">
+            {% csrf_token %}
+            <input type="hidden" name="recipient" value="{{ request.user.username }}">
+            <textarea name="message" rows="3" placeholder="Type your reply here..." required></textarea>
+            <br>
+            <button type="submit">Send Reply</button>
+        </form>
+    </div>
+{% endblock %}

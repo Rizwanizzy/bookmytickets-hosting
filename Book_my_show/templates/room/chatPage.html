@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  #top_container_div{
+    height:550px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 550px;
+    overflow-Y: auto;
+  }
+
+  #id_chat_item_container{
+    width: 50%; 
+    border-radius:30px;
+    display: flex;
+    justify-content: center;
+    background: #f5eaea;
+    overflow-Y:auto;
+  }
+  .username{
+    font-size:20px !important;
+  }
+  .content{
+    font-size:20px !important;
+  }
+</style>
+  <div class="container-fluid" style="">
+    <div class="row g-4">
+      <h4 class="mb-4" style="text-align:center"><strong>Chat With Us</strong></h4><br>
+      <div class="col-sm-12 col-xl-11" id="top_container_div" style="">
+        <div id="id_chat_item_container" class="col-lg-12 col-md-8 bg-light rounded h-100 p-4" style="">
+          <br>
+          <div id="chatContainer" class="chat__item__container">
+            <br />
+            <br />
+            <br />
+            {% for message in chat_messages %}
+            <div class="message">
+              <span class="username" style=""><strong>{{ message.sender.username }}:</strong></span>
+              <span class="content"  style="">{{ message.message }}</span>
+            </div>
+            <hr>
+            {% endfor %}
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div style="width:100%;text-align:center">
+      <input type="text" style="width: 39%;height: 40px;border-radius: 10px;" id="id_message_send_input" name="message" required />
+      <button type="submit" style="width: 9%;height: 40px;border-radius: 10px;" class="btn btn-primary" id="id_message_send_button">Send</button>
+    </div>
+  </div>
+</div>
+  <script>
+    const chatSocket = new WebSocket("ws://" + window.location.host + "/");
+    chatSocket.onopen = function (e) {
+      console.log("WebSocket connection opened!");
+      scrollToBottom();
+    };
+    chatSocket.onclose = function (e) {
+      console.log("WebSocket connection closed!");
+    };
+    document.querySelector("#id_message_send_input").focus();
+    document.querySelector("#id_message_send_input").onkeyup = function (e) {
+      if (e.keyCode == 13) {
+        document.querySelector("#id_message_send_button").click();
+      }
+    };
+    document.querySelector("#id_message_send_button").onclick = function (e) {
+      var messageInput = document.querySelector("#id_message_send_input").value;
+      if (messageInput.trim() === "") {
+        return; // If the message is empty or contains only whitespace, don't submit
+      }
+      var username = "{{ request.user.username }}";
+      chatSocket.send(JSON.stringify({ message: messageInput, username: username }));
+    };
+    chatSocket.onmessage = function (e) {
+      const data = JSON.parse(e.data);
+      var div = document.createElement("div");
+      div.innerHTML = '<span class="username" style="font-size: 20px;"><strong>' + data.username + ':</strong></span>' +
+                      '<span class="content" style="font-size: 20px;">' + data.message + '</span><hr>';
+      div.classList.add("message"); // Add the "message" CSS class
+      div.classList.add("new-message"); // Add the "new-message" CSS class for styling
+      
+      document.querySelector("#id_message_send_input").value = "";
+      document.querySelector("#chatContainer").appendChild(div);
+      scrollToBottom();
+
+      // AJAX request to save the chat message to the database
+      var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;  // Get the CSRF token from the page
+      var formData = new FormData();
+      formData.append('message', data.message);
+      formData.append('sender', data.username);
+      formData.append('recipient', 'admin');  // Replace 'admin' with the username of your admin user
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'save_chat_message/');  // Replace '/save_chat_message/' with the URL for your Django view to handle the message saving
+      xhr.setRequestHeader('X-CSRFToken', csrfToken);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          console.log('Chat message saved successfully!');
+        } else {
+          console.log('Failed to save the chat message.');
+        }
+      };
+      xhr.send(formData);
+
+    };
+
+    function scrollToBottom() {
+      var container = document.querySelector("#id_chat_item_container");
+      container.scrollTop = container.scrollHeight;
+    }
+  </script>
+{% endblock %}

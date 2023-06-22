@@ -1,0 +1,20 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+            <!-- 404 Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
+                    <div class="col-md-6 text-center p-4">
+
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <h4>Are you sure you want to delete this?</h4>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- 404 End -->
+{% endblock %}
+

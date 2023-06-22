@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body{
+        
+        }
+        .panel-order .row {
+            border-bottom: 1px solid #ccc;
+        }
+        .panel-order .row:last-child {
+            border: 0px;
+        }
+        .panel-order .row .col-md-1  {
+            text-align: center;
+            padding-top: 15px;
+        }
+        .panel-order .row .col-md-1 img {
+            width: 50px;
+            max-height: 50px;
+        }
+        .panel-order .row .row {
+            border-bottom: 0;
+        }
+        .panel-order .row .col-md-11 {
+            border-left: 1px solid #ccc;
+        }
+        .panel-order .row .row .col-md-12 {
+            padding-top: 7px;
+            padding-bottom: 7px; 
+        }
+        .panel-order .row .row .col-md-12:last-child {
+            font-size: 11px; 
+            color: #555;  
+            background: #efefef;
+        }
+        .panel-order .btn-group {
+            margin: 0px;
+            padding: 0px;
+        }
+        .panel-order .panel-body {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+        .panel-order .panel-deading {
+            margin-bottom: 0;
+        }   
+</style>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+<div class="container bootdey">
+    <div class="panel panel-default panel-order" style="width:97%">
+        <div class="panel-heading">
+            <strong>Order history</strong>
+            <div class="btn-group pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Filter history <i class="fa fa-filter"></i></button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a href="#">Approved orders</a></li>
+                        <li><a href="#">Pending orders</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% for booking in page %}
+            <div class="panel-body">
+                <br>
+                <div class="row">
+                    <div class="col-md-2"><img src="{{booking.movie_poster.url}}" class="media-object img-thumbnail" />
+                        <span><strong>{{booking.movie}}</strong></span>
+                    </div>
+                    
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right" style="margin:60px 267px">
+                                    <span><strong>Booking Status</strong><br>
+                                        {% if booking.booked_seats %}
+                                            <label class="label label-success">Successful</label><br><br><br>
+                                        {% endif %}
+                                    {% for cancel_request in cancel_requests %}
+                                        {% if cancel_request.booking_id == booking.id and cancel_request.status == 'accepted' %}
+                                            <label class="label label-danger">Cancelled</label><br><br><br>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <span id="cancel-request-{{ booking.id }}"></span>
+
+                                    {% if cancel_requests %}
+                                        {% for cancel_request in cancel_requests %}
+                                            {% if cancel_request.booking_id == booking.id and cancel_request.status != 'accepted' %}
+                                                <span><strong>Cancel Request</strong><br>            
+                                                <label class="label label-danger">{{ cancel_request.status }}</label> 
+                                            {% endif %}
+                                            {% empty %}
+                                                {% comment %} Hide the cancel button if there are no cancellation requests {% endcomment %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% comment %} Hide the cancel button if there are no cancellation requests {% endcomment %}
+                                    {% endif %}
+                                </div>
+                                <span><strong>Booking id:</strong></span> <span class="label label-info">{{booking.booking_id}}</span><br /><br>
+                                <strong>Payment id:</strong>{{booking.payment_id}} <br>
+                                <strong>Theatre Name:</strong>{{booking.theatre}} <br> 
+                                <strong>Screen Name:</strong>{{booking.screen}} <br> <strong>Seat No:</strong>{% if booking.booked_seats %}{{booking.booked_seats}} {% else %}Deselected{% endif %}<br><strong>Quantity :</strong> {{booking.count}}<br> <strong>price:</strong> ₹{{booking.price}} <br />
+                                <strong>Booking date:</strong>{{booking.date}}   <br><strong>Booking time:</strong>{{booking.show_time}}<br><br>
+                                
+                                <button class="cancel-button btn btn-danger btn-xs" style="padding:5px 8px" data-booking-id="{{ booking.id }}">Cancel</button><br><br>
+                             
+                            </div>
+                            <div class="col-md-12">booked on: {{booking.booked_date}} </div>
+                        </div>
+                    </div>
+                </div>
+            </div><br><hr>
+        {% endfor %}
+    </div>
+        
+    </div>
+    <nav aria-label="Page navigation example" style="text-align:center">
+        <ul class="pagination">
+          {% if page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+          {% endif %}
+          {% for num in page.paginator.page_range %}
+            {% if page.number == num %}
+              <li class="page-item"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page.has_next %}
+            <li class="page-item">
+              
+              <a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+              
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const csrfToken = "{{ csrf_token }}";
+    $(document).ready(function() {
+        $('.cancel-button').on('click', function() {
+            var bookingId = $(this).data('booking-id');
+            var reason = prompt('Reason for cancellation:');
+            if (reason) {
+                $.ajax({
+                    url: '{% url "cancel_booking" %}',
+                    method: 'POST',
+                    data: {
+                        'booking_id': bookingId,
+                        'reason': reason
+                    },
+                    beforeSend: function(xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    },
+                    success: function(response) {
+                        // Handle success response
+                        if (response.status === 'success') {
+                            alert('Cancellation request sent successfully!');
+                            $('#cancel-request-' + bookingId).html('<strong>Cancel Request</strong><br><label class="label label-danger">pending</label>');
+                        } else {
+                            alert('Cancellation request already sent.');
+                        }
+                    },
+                    error: function() {
+                        // Handle error response
+                        alert('An error occurred while sending the cancellation request.');
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
+

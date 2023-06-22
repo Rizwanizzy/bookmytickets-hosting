@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        
+    }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #BA68C8
+    }
+    
+    .profile-button {
+        background: rgb(99, 39, 120);
+        box-shadow: none;
+        border: none
+    }
+    
+    .profile-button:hover {
+        background: #682773
+    }
+    
+    .profile-button:focus {
+        background: #682773;
+        box-shadow: none
+    }
+    
+    .profile-button:active {
+        background: #682773;
+        box-shadow: none
+    }
+    
+    .back:hover {
+        color: #682773;
+        cursor: pointer
+    }
+    
+    .labels {
+        font-size: 11px
+    }
+    
+    .add-experience:hover {
+        background: #BA68C8;
+        color: #fff;
+        cursor: pointer;
+        border: solid 1px #BA68C8
+    }
+    .col-md-6 a{
+        color:black;
+    }
+    select{
+        width:85px;
+    }
+    #id_email{
+        width:250px;
+    }
+</style>
+
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            {% if user_profile.profile_image %}
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" style="border-radius:50%" src="{{user_profile.profile_image.url}}"><br>
+            {% else %}
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" style="border-radius:50%" src="{% static 'images/icon1.png' %}"><br>
+            {% endif %}<br>
+            <strong><span class="font-weight-bold">{{user_profile.user.first_name}}  {{user_profile.user.last_name}}</span><br></strong>
+            <span class="font-weight-bold">{{user_profile.user.username}}</span><br>
+            <span class="text-black-50">{{user_profile.user.email}}</span><br>
+            <span>{{user_profile.phone}}</span><br>
+            <span>{{user_profile.address}}</span><br>
+            <span>{{user_profile.location}}</span><br>
+        </div>
+        </div>
+        <div class="col-md-5 border-right">
+            <form action="{% url 'user_profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <h4 class="">Profile Settings</h4>
+                    </div><br>
+            
+                    <div class="row mt-5">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labels" for="id_first_name">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labels" for="id_last_name">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labels" for="id_profile_image">Profile Picture</label>
+                                {{ form.profile_image }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="labels" for="id_phone">Mobile Number</label>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="labels" for="id_username">User Name</label><br>
+                                {{ form.username }}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="labels" for="id_email">Email ID</label><br>
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        
+                    
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="labels" for="id_address">Address</label><br>
+                                {{ form.address }}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="labels" for="id_location">Location</label><br>
+                                {{ form.location }}
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="mt-5 text-center">
+                        <button class="btn btn-primary profile-button" type="submit">Update Profile</button>
+                    </div>
+                </div>
+            </form>
+            
+            
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endblock %}

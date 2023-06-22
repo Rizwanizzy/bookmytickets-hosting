@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+	.payment-right span{
+		text-align: left;
+  		margin-left: 85px;
+	}
+	.payment-right p,h6 {
+		display: flex;
+		align-items: left;
+	}
+</style>
+<div class="error-page" style="height:74rem">
+	<div class="alert alert-success" role="alert" style="margin-top:-18rem">
+		<div style="display:flex">
+			<img src="{% static 'images/successful.png' %}" style="width: 50px;margin-right:20px">
+			<h4>Thank You For Your Purchease!</h4>
+		</div>
+		
+	</div>
+	{% if booked_details %}
+	<div class="now-showing-list">
+		<div class="col-md-4 movies-by-category movie-booking">
+			
+			<div class="movie-ticket-book">
+					<div class="clearfix"></div>
+					<img src="{{booked_details.movie_poster.url}}" alt="" />
+					
+			</div>
+		</div>
+		<div class="col-md-8 movies-dates">	
+			<div class="movie-date-selection" style="display: flex;flex-direction: column;">
+				
+				<div class="payment-right">
+					<h3>Booking Details</h3>
+					<h6><span>Movie-Name:</span>{{booked_details.movie}}</h6>
+					<p><span>UserName:</span> {{booked_details.user}} </p>
+					<p><span>Email ID:</span> {{booked_details.email}} </p>
+					<p><span>Phone No:</span> {{booked_details.phone}} </p>
+					<p><span>Booking ID:</span> {{booked_details.booking_id}} </p>
+					<p><span>Payment ID:</span> {{booked_details.payment_id}} </p>
+					<p><span>Theatre:</span> {{booked_details.theatre}} </p>
+					<p><span>Screen:</span> {{booked_details.screen}} </p>
+					{% comment %} <p><span>Location:</span> Trivandrum, Trivandrum</p> {% endcomment %}
+					<p><span>Date:</span> {{booked_details.date}}</p>
+					<p><span>Time:</span> {{booked_details.show_time}}</p>
+					<p><span>Seat Info:</span> {{booked_details.booked_seats}}</p>
+					<p><span>Qty:</span> {{booked_details.count}}</p>
+					{% comment %} <p>+ (Internet handling fees : Rs. 42.00 (incl. of Service Tax))</p> {% endcomment %}
+					<h5>Total Amount Paid :Rs. {{booked_details.price}}/-</h5>
+				</div>
+				
+			</div>
+			
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	{% endif %}
+
+</div>
+{% endblock %}
+
+
+		

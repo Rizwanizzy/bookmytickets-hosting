@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    .main-body{
+        height:700px;
+    }
+    nav{
+        margin-top:0px
+        padding-right:50px;
+        padding-bottom:20px;
+    }
+    .heading{
+        text-align:center;
+    }
+    .body{
+        width:50%;
+        margin:auto;
+    }
+    h3{
+        color:black;
+    }
+
+</style>
+    <div class="main-body">
+
+        <div class="heading">
+            <h2>Room</h2>
+        </div>
+        <div class="body">
+            {% for room in rooms %}
+                <div>
+                    <a href="{% url 'room' room.slug %}"><h3>{{room.name}}</h3></a>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    </div>
+{% endblock %}

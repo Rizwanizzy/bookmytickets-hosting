@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+	<div class="error-page">
+		<h2>Error 404 - Not Found</h2>
+		<p>No search result has found based on your query.</p>
+		<a href="{% url 'home' %}">Go Back To Home Page</a>
+	</div>
+</div>
+
+{% endblock %}

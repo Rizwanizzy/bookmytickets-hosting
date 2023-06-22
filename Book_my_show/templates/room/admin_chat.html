@@ -1,0 +1,46 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+<div class="container-fluid" style="">
+    <div class="row g-4">
+        <h6 class="mb-4" style="text-align:center">Chat Here</h6><br>
+        <div class="col-sm-12 col-xl-11" style="width: 65%;margin: auto;height:550px;overflow-Y:auto;background-color:#F3F6F9 !important" id="chatContainer">
+            <div class="bg-light rounded h-100 p-4" style="">
+                
+                
+                {% for message in chat_messages %}
+                    {% if message.sender == request.user %}
+                        <div style="float:right"><strong >Me:</strong> {{ message.message }}</div><br>
+                        <hr>
+                        
+                    {% else %}
+                        <div><strong >{{ message.sender.username }}:</strong > {{ message.message }}</div><br>
+                        <hr>
+                    {% endif %}
+                    
+                {% endfor %}
+            
+                <br>
+                
+            </div>
+            
+        </div>
+        <form method="POST" action="" style="position: sticky; bottom: 0;">
+            {% csrf_token %}
+            <div style="display:flex;flex-wrap: wrap;justify-content: center;">
+                <input type="hidden" name="recipient" value="{{ user_id }}">
+                <input type="text" name="message" style="width: 50%;height: 50px;border-radius: 10px;margin-right:5px" placeholder="Type your reply here..." required></textarea>
+                <br>
+                <button class="btn btn-primary" style="border-radius: 10px;" type="submit">Send Reply</button>
+            </div>
+        </form>
+    </div>
+    
+</div>
+<script>
+    // Scroll to the bottom of the chat container
+    var chatContainer = document.getElementById("chatContainer");
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+</script>
+
+{% endblock %}

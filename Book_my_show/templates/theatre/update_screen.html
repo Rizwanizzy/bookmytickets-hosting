@@ -1,0 +1,119 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+<style>
+    .form-control{
+        width:140%;
+    }
+</style>
+        <!-- Form Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-7" style="margin-left:13%">
+                        <div class="bg-light rounded h-100 p-4" style="width:100%">
+                            <h6 class="mb-4">Add Screen</h6>
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% if screens %}
+                                <div style="display:flex">
+                                    <div class="col-sm-12 col-xl-6" style="margin-right:1rem">
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">NAME</label>
+                                            <input type="text" class="form-control" id="title" name="name" placeholder="Screen Name"
+                                                aria-describedby="emailHelp" value="{{screens.name}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">NORMAL</label>
+                                            <input type="number" class="form-control" id="title" name="price1" placeholder="Normal Price"
+                                                aria-describedby="emailHelp" value="{{screens.price1}}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">EXECUTIVE</label>
+                                            <input type="number" class="form-control" id="title" name="price2" placeholder="Executive Price"
+                                                aria-describedby="emailHelp" {% if screens.price2 is None%} value="" {% else %} value="{{screens.price2}}" {% endif %}>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">PREMIUM</label>
+                                            <input type="number" class="form-control" id="title" name="price3" placeholder="Premium Price"
+                                                aria-describedby="emailHelp" {% if screens.price3 is None%} value="" {% else %} value="{{screens.price3}}" {% endif%}>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">MOVIE</label>
+                                            <select class="form-select" id="floatingSelect" name="movie"
+                                                aria-label="Floating label select example" required>
+                                                <option selected></option>
+                                                {% for mov in movies%}
+                                                <option value="{{mov.id}}" {% if screens.movies.id == mov.id %} selected {% endif %}>{{mov.title}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">No. Of Rows</label>
+                                            <input type="number" class="form-control" id="title" name="rows" value="{{screens.total_seat_rows}}" placeholder="Total No.Of Rows"
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">No. Of Columns</label>
+                                            <input type="number" class="form-control" id="title" name="columns" value="{{screens.total_seat_columns}}" placeholder="Total No.Of Columns"
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">SHOW TIMES</label><br>
+                                            {% for show_time in selected_show_times %}
+                                                <div class="show-time-group">
+                                                    <input type="checkbox" name="existing_show_times[]" value="{{ show_time.id }}" checked>
+                                                    <label>{{ show_time.time }}</label>
+                                                    <button type="button" class="btn btn-link remove-show-time">Remove</button><br>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        
+
+                                        <div class="mb-3">
+                                            <div id="show-times-container">
+                                            </div>
+                                            <button type="button" class="btn btn-primary" id="add-show-time">Add Show Time</button>
+                                        </div>
+     
+                                    </div>
+                                </div>
+                                <div align="center">
+                                    <button type="submit" class="btn btn-primary">UPDATE</button>
+                                    <a href="{% url 'delete_screen' screens.id %}" class="btn btn-danger">DELETE</a>
+                                    <a href="{% url 'theatre_screen' %}" class="btn btn-warning">CANCEL</a>
+                                </div>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        <!-- Form End -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        console.log("Document ready!");
+
+        // Add show time input field and remove button
+        $("#add-show-time").on('click', function() {
+            var inputHtml = '<div class="show-time-group">' +
+                '<input type="time" class="form-control" name="show_times[]" required>' +
+                '<button type="button" class="btn btn-link remove-show-time">Remove</button>' +
+                '</div>';
+            $("#show-times-container").append(inputHtml);
+        });
+
+        // Remove show time entry
+        $(document).on('click', '.remove-show-time', function() {
+            $(this).closest('.show-time-group').remove();
+        });
+
+        // Submit the form
+        $("#submit-form").on('click', function() {
+            $("form").submit();
+        });
+    });
+</script>
+
+{% endblock %}

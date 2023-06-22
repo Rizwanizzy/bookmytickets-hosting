@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .movie-not-found {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+        text-align: center;
+    }
+</style>
+<div class="now-showing-list">
+    <div class="col-md-4 movies-by-category movie-booking">
+        <div class="movie-ticket-book">
+            {% if mov %}
+            <div class="clearfix"></div>
+            <img src="{{mov.image.url}}" alt="" />
+            <div class="bahubali-details">
+                <h4>Movie Title:</h4>
+                <p>{{mov.title}}</p>
+                <h4>Release Date:</h4>
+                <p>{{mov.release_date}}</p>
+                <h4>Duration:</h4>
+                <p>{{mov.runtime}}</p>
+                <h4>Director:</h4>
+                <p></p>
+                <h4>Language:</h4>
+                <p>{{mov.language}}</p>
+                <h4>Genre:</h4>
+                <p>{{mov.genre}}</p>
+                <h4>Description:</h4>
+                <p>{{mov.description}}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-8 movies-dates">
+        <div id="horizontalTab" style="display: block; width: 100%; margin: 0px;">
+            <ul class="resp-tabs-list" style="margin-left: 12px">
+                {% for date in date_range %}
+                <li class="resp-tab-item" aria-controls="tab_item-{{ date }}" role="tab">
+                    <span>{{ date|date:"D" }} {{ date|date:"d" }}</span>
+                </li>
+                {% endfor %}
+                <div class="clearfix"></div>
+            </ul><br>
+    
+            {% for date in date_range %}
+            <div class="resp-tabs-container">
+                <div class="tab-1 resp-tab-content" aria-labelledby="tab_item-{{ date }}">
+                    {% for theatre in page %}
+                        {% if theatre.show_times.exists %}
+                        <div class="movie-date-selection">
+                            <ul>
+                                <li class="location">
+                                    <a href="pic-a-movie.html">
+                                        <i class="fa fa-map-marker"></i>{{ theatre.theatre.user.username }}: Location</a>
+                                    <strong style="margin: 3rem;font-size: 2rem">{{ theatre.name }}</strong>
+                                </li>
+                                <div style="display:flex">
+                                    {% for show in theatre.show_times.all %}
+                                    <li class="time">
+                                        <a href="{% url 'seat_selection' theatre_id=theatre.theatre.id screen_id=theatre.id show_time_id=show.id selected_date=date %}"
+                                            style="color:white" class="btn btn-success">{{ show.time }}</a>
+                                    </li>
+                                    {% endfor %}
+                                </div>
+                            </ul>
+                        </div>
+                        {% endif %}
+                        {% empty %}
+                        <div class="movie-not-found">
+                            <strong><h4>No theaters available for this movie.</h4></strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            
+
+            {% endfor %}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<nav aria-label="Page navigation example" style="text-align:center">
+    <ul class="pagination">
+      {% if page.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for num in page.paginator.page_range %}
+        {% if page.number == num %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page.has_next %}
+        <li class="page-item">
+          
+          <a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+          
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+</div>
+{% endblock %}
